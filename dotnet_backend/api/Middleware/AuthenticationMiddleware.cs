@@ -41,7 +41,7 @@ public class AuthenticationMiddleware
     {
         var session = sessionRepository.getSessionOrNull(sessionId);
         
-        return session?.hasvalidauthenticationtoken() ?? false;
+        return session?.HasValidAuthenticationToken() ?? false;
     }
 }
 
