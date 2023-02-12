@@ -1,4 +1,5 @@
-﻿using api.Services;
+﻿using api.Models;
+using api.Services;
 using Microsoft.AspNetCore.WebUtilities;
 
 namespace api.Middleware;
@@ -14,15 +15,27 @@ public class AuthenticationMiddleware
 
     public async Task InvokeAsync(HttpContext httpContext, ISessionRepository sessionRepository)
     {
-        await _next(httpContext);
         var sessionId = httpContext.Session.Id;
-        if (SessionIdHasAlreadyAuthenticated(sessionRepository, sessionId))
+        var session = await sessionRepository.GetSessionOrNull(sessionId);
+
+        if (session?.HasValidAuthenticationToken() ?? false)
         {
             await _next(httpContext);
             return;
         }
-
+        
         httpContext.Session.SetString("CustomSessionID", new Guid().ToString());
+
+        if (session == null)
+        {
+            var newSession = new Session
+            {
+                SessionId = sessionId
+            };
+            
+            await sessionRepository.InsertSession(newSession);
+        }
+
         var spotifySsoBaseUrl = "https://accounts.spotify.com/authorize";
         var queryParameters = new Dictionary<string, string?>
         {
@@ -30,19 +43,12 @@ public class AuthenticationMiddleware
             {"client_id", "543a4066a8a94ff7ab4705453913eb4e"},
             {"scope", "playlist-read-private"},
             {"redirect_uri", "http://localhost:4200/redirect"},
-            {"state", httpContext.Session.Id} 
+            {"state", sessionId} 
         };
         
         var spotifySsoUrl = QueryHelpers.AddQueryString(spotifySsoBaseUrl, queryParameters);
         
         httpContext.Response.Redirect(spotifySsoUrl);
-    }
-
-    private bool SessionIdHasAlreadyAuthenticated(ISessionRepository sessionRepository, string sessionId)
-    {
-        var session = sessionRepository.getSessionOrNull(sessionId);
-        
-        return session?.HasValidAuthenticationToken() ?? false;
     }
 }
 

@@ -4,5 +4,6 @@ namespace api.Services;
 
 public interface ISessionRepository
 {
-    Session? getSessionOrNull(string sessionId);
+    Task<Session?> GetSessionOrNull(string sessionId);
+    Task InsertSession(Session session);
 }

@@ -1,9 +1,13 @@
 ﻿using api.Infrastructure;
+using api.Infrastructure.Models;
 using api.Middleware;
 using api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
+
+builder.Services.Configure<MongoSettings>(
+    builder.Configuration.GetSection("Mongo"));
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
