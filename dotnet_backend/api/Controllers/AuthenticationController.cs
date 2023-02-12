@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using api.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
@@ -6,25 +7,28 @@ namespace api.Controllers;
 [Route("[controller]")]
 public class AuthenticationController : ControllerBase
 {
-    private readonly HttpContext? httpContext;
+    private readonly SpotifyAuthorizationService _spotifyAuthorizationService;
+    private readonly HttpContext? _httpContext;
 
-    public AuthenticationController(IHttpContextAccessor httpContextAccessor)
+    public AuthenticationController(IHttpContextAccessor httpContextAccessor, SpotifyAuthorizationService spotifyAuthorizationService)
     {
-        this.httpContext = httpContextAccessor.HttpContext;
+        _spotifyAuthorizationService = spotifyAuthorizationService;
+        _httpContext = httpContextAccessor.HttpContext;
     }
         
         
     [Route("callback")]
     [HttpGet]
-    public void Callback()
+    public async Task Callback(string code, string state)
     {
-        Console.WriteLine("Callback called.");
+        await _spotifyAuthorizationService.Authenticate(code, state);
+        _httpContext.Response.Redirect("http://localhost:4200/");
     }
     
     [Route("login")]
     [HttpGet]
     public void Login()
     {
-        Console.WriteLine($"Login called. SessionId: {httpContext?.Session.Id}");
+        Console.WriteLine($"Login called. SessionId: {_httpContext?.Session.Id}");
     }
 }

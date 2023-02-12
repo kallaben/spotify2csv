@@ -16,8 +16,9 @@ builder.Services.AddSession(options =>
 });
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
 builder.Services.AddScoped<ISessionRepository, MongoSessionRepository>();
-
+builder.Services.AddScoped<SpotifyAuthorizationService>();
 
 var app = builder.Build();
 

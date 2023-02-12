@@ -33,4 +33,12 @@ public class MongoSessionRepository: ISessionRepository
         await _sessionsCollection.InsertOneAsync(session);
     }
 
+    public async Task UpdateSessionWithTokens(string sessionId, string accessToken, string refreshToken)
+    {
+        var session = await GetSessionOrNull(sessionId);
+        session.AccessToken = accessToken;
+        session.RefreshToken = refreshToken;
+        
+        await _sessionsCollection.ReplaceOneAsync(x => x.Id == session.Id, session);
+    }
 }
