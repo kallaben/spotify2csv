@@ -1,4 +1,5 @@
-﻿using api.Infrastructure;
+﻿using api.Gateways;
+using api.Infrastructure;
 using api.Infrastructure.Models;
 using api.Middleware;
 using api.Services;
@@ -18,7 +19,10 @@ builder.Services.AddSession(options =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<ISessionRepository, MongoSessionRepository>();
+builder.Services.AddScoped<UserContext>();
+builder.Services.AddScoped<SpotifyApiGateway>();
 builder.Services.AddScoped<SpotifyAuthorizationService>();
+builder.Services.AddScoped<ExportService>();
 
 var app = builder.Build();
 
