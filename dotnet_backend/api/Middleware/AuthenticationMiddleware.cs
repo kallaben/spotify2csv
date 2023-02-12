@@ -14,6 +14,7 @@ public class AuthenticationMiddleware
 
     public async Task InvokeAsync(HttpContext httpContext, ISessionRepository sessionRepository)
     {
+        await _next(httpContext);
         var sessionId = httpContext.Session.Id;
         if (SessionIdHasAlreadyAuthenticated(sessionRepository, sessionId))
         {
@@ -21,15 +22,15 @@ public class AuthenticationMiddleware
             return;
         }
 
-
+        httpContext.Session.SetString("CustomSessionID", new Guid().ToString());
         var spotifySsoBaseUrl = "https://accounts.spotify.com/authorize";
         var queryParameters = new Dictionary<string, string?>
         {
             {"response_type", "code"},
             {"client_id", "543a4066a8a94ff7ab4705453913eb4e"},
             {"scope", "playlist-read-private"},
-            {"redirect_uri", "http://localhost:4200/api/callback"},
-            {"state", "sessionId"} 
+            {"redirect_uri", "http://localhost:4200/redirect"},
+            {"state", httpContext.Session.Id} 
         };
         
         var spotifySsoUrl = QueryHelpers.AddQueryString(spotifySsoBaseUrl, queryParameters);
