@@ -8,6 +8,11 @@ public class AuthenticationMiddleware
 {
     private readonly RequestDelegate _next;
 
+    private readonly List<string> _whitelistedPaths = new List<string>
+    {
+        "/Authentication/callback"
+    };
+
     public AuthenticationMiddleware(RequestDelegate next)
     {
         _next = next;
@@ -15,6 +20,12 @@ public class AuthenticationMiddleware
 
     public async Task InvokeAsync(HttpContext httpContext, ISessionRepository sessionRepository)
     {
+        if (_whitelistedPaths.Contains(httpContext.Request.Path))
+        {
+            await _next(httpContext);
+            return;
+        }
+        
         var sessionId = httpContext.Session.Id;
         var session = await sessionRepository.GetSessionOrNull(sessionId);
 
