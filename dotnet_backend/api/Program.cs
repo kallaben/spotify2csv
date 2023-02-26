@@ -1,14 +1,23 @@
 ﻿using api.Gateways;
 using api.Infrastructure;
-using api.Infrastructure.Models;
 using api.Middleware;
+using api.Models.Settings;
 using api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+var root = Directory.GetCurrentDirectory();
+var dotenv = Path.Combine(root, ".env");
+DotEnv.Load(dotenv);
+
 builder.Services.AddControllers();
 
+builder.Configuration.AddEnvironmentVariables();
 builder.Services.Configure<MongoSettings>(
     builder.Configuration.GetSection("Mongo"));
+builder.Services.Configure<SpotifyApiSettings>(
+    builder.Configuration.GetSection("SpotifyApi"));
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

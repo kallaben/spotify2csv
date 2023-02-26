@@ -1,5 +1,5 @@
-﻿using api.Infrastructure.Models;
-using api.Models;
+﻿using api.Models;
+using api.Models.Settings;
 using api.Services;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;

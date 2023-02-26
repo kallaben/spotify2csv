@@ -1,4 +1,6 @@
 ﻿using api.Models;
+using api.Models.Settings;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
 namespace api.Gateways;
@@ -6,13 +8,15 @@ namespace api.Gateways;
 public class SpotifyApiGateway
 {
     private readonly HttpClient _httpClient;
-    private readonly string _clientId = "543a4066a8a94ff7ab4705453913eb4e";
-    private readonly string _clientSecret = "";
+    private readonly string _clientId;
+    private readonly string _clientSecret;
 
 
-    public SpotifyApiGateway(IHttpClientFactory httpClientFactory)
+    public SpotifyApiGateway(IHttpClientFactory httpClientFactory, IOptions<SpotifyApiSettings> spotifyApiSettings)
     {
         _httpClient = httpClientFactory.CreateClient();
+        _clientId = spotifyApiSettings.Value.ClientId;
+        _clientSecret = spotifyApiSettings.Value.ClientSecret;
     }
 
     public async Task<GetPlaylistsResponse> GetPlaylistsForUser(string accessToken)
