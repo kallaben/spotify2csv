@@ -7,5 +7,5 @@ public interface ISessionRepository
 {
     Task<Session?> GetSessionOrNull(string sessionId);
     Task InsertSession(Session session);
-    Task UpdateSessionWithTokens(string sessionId, string accessToken, string refreshToken);
+    Task UpdateSessionWithTokens(string sessionId, SpotifyAuthentication spotifyAuthentication);
 }

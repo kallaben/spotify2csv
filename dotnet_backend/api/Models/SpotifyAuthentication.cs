@@ -1,0 +1,7 @@
+﻿namespace api.Models;
+
+public class SpotifyAuthentication
+{
+    public string AccessToken { get; set; }
+    public string RefreshToken { get; set; }
+}

@@ -54,7 +54,7 @@ public class AuthenticationMiddleware
             {"client_id", "543a4066a8a94ff7ab4705453913eb4e"},
             {"scope", "playlist-read-private"},
             {"redirect_uri", "http://localhost:4200/redirect"},
-            {"state", sessionId} 
+            {"state", $"{sessionId}:{httpContext.Request.Path}"} 
         };
         
         var spotifySsoUrl = QueryHelpers.AddQueryString(spotifySsoBaseUrl, queryParameters);

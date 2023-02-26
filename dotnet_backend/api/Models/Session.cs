@@ -9,11 +9,10 @@ public class Session
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
     public string SessionId { get; set; }
-    public string? AccessToken { get; set; }
-    public string? RefreshToken { get; set; }
-
+    public SpotifyAuthentication? SpotifyAuthentication { get; set; }
+    
     public bool HasValidAuthenticationToken()
     {
-        return AccessToken != null;
+        return SpotifyAuthentication != null;
     }
 }

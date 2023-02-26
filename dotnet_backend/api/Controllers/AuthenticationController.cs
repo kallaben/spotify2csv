@@ -21,8 +21,8 @@ public class AuthenticationController : ControllerBase
     [HttpGet]
     public async Task Callback(string code, string state)
     {
-        await _spotifyAuthorizationService.Authenticate(code, state);
-        _httpContext.Response.Redirect("http://localhost:4200/");
+        var redirectPath = await _spotifyAuthorizationService.Authenticate(code, state);
+        _httpContext.Response.Redirect($"http://localhost:4200{redirectPath}");
     }
     
     [Route("login")]

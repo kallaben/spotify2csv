@@ -1,4 +1,5 @@
-﻿using api.Models;
+﻿using api.Gateways;
+using api.Models;
 using Newtonsoft.Json.Linq;
 
 namespace api.Services;
@@ -6,45 +7,31 @@ namespace api.Services;
 public class SpotifyAuthorizationService
 {
     private readonly ISessionRepository _sessionRepository;
-    private readonly HttpClient _httpClient;
-    private readonly string _clientId = "543a4066a8a94ff7ab4705453913eb4e";
-    private readonly string _clientSecret = "";
-        
+    private readonly SpotifyApiGateway _spotifyApiGateway;
 
-    public SpotifyAuthorizationService(IHttpClientFactory httpClientFactory, ISessionRepository sessionRepository)
+    public SpotifyAuthorizationService(ISessionRepository sessionRepository, SpotifyApiGateway spotifyApiGateway)
     {
         _sessionRepository = sessionRepository;
-        _httpClient = httpClientFactory.CreateClient();
+        _spotifyApiGateway = spotifyApiGateway;
     }
 
 
-    public async Task Authenticate(string authenticationCode, string sessionId)
+    public async Task<string> Authenticate(string authenticationCode, string state)
     {
-        var authString = $"{_clientId}:{_clientSecret}";
-        var base64AuthString = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(authString));
-        var basicAuthString = $"Basic {base64AuthString}";
+        var stateElements = state.Split(":", 2);
+        var sessionId = stateElements[0];
+        var originalPath = stateElements[1];
         
-        var request = new HttpRequestMessage(HttpMethod.Post, "https://accounts.spotify.com/api/token")
-        {
-            Headers =
-            {
-                {"Authorization", basicAuthString}
-            },
-            Content = new FormUrlEncodedContent(new Dictionary<string, string> 
-            {
-                {"code", authenticationCode},
-                {"redirect_uri", "http://localhost:4200/redirect"},
-                {"grant_type", "authorization_code"}
-            })
-        };
-        
-        var response = await _httpClient.SendAsync(request);
-        response.EnsureSuccessStatusCode();
-        var responseBody = await response.Content.ReadAsStringAsync();
-        var result = JObject.Parse(responseBody);
-        var accessToken= result["access_token"].ToString();
-        var refreshToken = result["refresh_token"].ToString();
+        var spotifyAuthentication = await this._spotifyApiGateway.GetAccessToken(authenticationCode);
 
-        await _sessionRepository.UpdateSessionWithTokens(sessionId, accessToken, refreshToken);
+        await _sessionRepository.UpdateSessionWithTokens(sessionId, spotifyAuthentication);
+
+        var redirectPath = GetRedirectUrlFromOriginalPath(originalPath);
+        return redirectPath;
+    }
+
+    private string GetRedirectUrlFromOriginalPath(string originalPath)
+    {
+        return "/";
     }
 }

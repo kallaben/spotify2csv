@@ -33,12 +33,10 @@ public class MongoSessionRepository: ISessionRepository
         await _sessionsCollection.InsertOneAsync(session);
     }
 
-    public async Task UpdateSessionWithTokens(string sessionId, string accessToken, string refreshToken)
+    public async Task UpdateSessionWithTokens(string sessionId, SpotifyAuthentication spotifyAuthentication)
     {
         var session = await GetSessionOrNull(sessionId);
-        session.AccessToken = accessToken;
-        session.RefreshToken = refreshToken;
-        
+        session.SpotifyAuthentication = spotifyAuthentication;
         await _sessionsCollection.ReplaceOneAsync(x => x.Id == session.Id, session);
     }
 }

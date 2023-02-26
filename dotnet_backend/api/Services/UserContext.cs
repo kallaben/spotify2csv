@@ -20,6 +20,6 @@ public class UserContext
     {
         var session = await _sessionRepository.GetSessionOrNull(this.GetSessionId());
         
-        return session.AccessToken;
+        return session.SpotifyAuthentication?.AccessToken;
     }
 }
