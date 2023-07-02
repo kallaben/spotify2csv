@@ -15,3 +15,12 @@ The frontend should be up on running now.
 4. Run the "api" launch configuration through Rider (you will be informed if you are missing the correct dotnet SDK, and will get a link to install it in the console output).
 
 Once the backend and frontend are both running, you should be able to access the app at the http://localhost:4200/ domain.
+
+# TODOs
+- [ ] After logging in, the button should have a "Fetch playlists" button. The users playlists should be displayed, and they should then be able to select all the playlists they would like to export to CSV. A new button should appear below the playlists, with the text "Export". Clicking this will download a CSV file with all the playlists included.
+  - [ ] The frontend should have the following pages:
+    - [ ] A page only showing a "Login to Spotify" button when the user is not logged in.
+    - [ ] A page only showing a "Fetch playlists" button when the user is logged in.
+  - [ ] The backend should have the following endpoints:
+    - [ ] A `GET export/playlists` for getting a list of the names and IDs of all the user's playlists.
+    - [ ] A `GET export/csv?playlist_ids=["132asd","sdf254"]` which takes a list of playlist IDs and produces a CSV file.
