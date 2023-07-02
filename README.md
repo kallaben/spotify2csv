@@ -7,7 +7,7 @@
 
 The frontend should be up on running now.
 
-## Backend
+## Backend:
 1. Navigate to the `dotnet_backend/api` folder.
 2. Run `docker compose up` to start the Mongo database.
 3. Go to the [Spotify for developers dashboard](https://developer.spotify.com/dashboard/543a4066a8a94ff7ab4705453913eb4e/settings) to get the client secret used to communicate with the Spotify API. The secret needs to be inserted in `dotnet_backend/api/appsettings.Development.json`.
