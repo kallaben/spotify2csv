@@ -31,4 +31,11 @@ public class AuthenticationController : ControllerBase
     {
         Console.WriteLine($"Login called. SessionId: {_httpContext?.Session.Id}");
     }
+    
+    [Route("is-authenticated")]
+    [HttpGet]
+    public async Task<bool> IsAuthenticated()
+    {
+        return await _spotifyAuthorizationService.IsAuthenticated();
+    }
 }

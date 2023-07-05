@@ -10,7 +10,8 @@ public class AuthenticationMiddleware
 
     private readonly List<string> _whitelistedPaths = new List<string>
     {
-        "/Authentication/callback"
+        "/Authentication/callback", 
+        "/Authentication/is-authenticated"
     };
 
     public AuthenticationMiddleware(RequestDelegate next)

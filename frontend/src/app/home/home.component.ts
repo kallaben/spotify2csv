@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '../services/authentication.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
+  public isAuthenticated: Observable<boolean>;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(private authenticationService: AuthenticationService) {
+    this.isAuthenticated =
+      this.authenticationService.userHasAuthenticatedWithSpotify();
   }
-
 }
