@@ -7,10 +7,27 @@ import { RedirectComponent } from './redirect/redirect.component';
 import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ExportComponent } from './export/export.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatTableModule } from '@angular/material/table';
+import { CdkTableModule } from '@angular/cdk/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
-  declarations: [AppComponent, RedirectComponent, HomeComponent, ExportComponent],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule],
+  declarations: [
+    AppComponent,
+    RedirectComponent,
+    HomeComponent,
+    ExportComponent,
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatTableModule,
+    CdkTableModule,
+    MatCheckboxModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })

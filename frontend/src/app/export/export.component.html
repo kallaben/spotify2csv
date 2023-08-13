@@ -1,5 +1,37 @@
 <div class="toolbar" role="banner"></div>
 
-<div class="content" role="main">
-  <span>The component for exporting</span>
-</div>
+<table
+  mat-table
+  [dataSource]="playlists"
+  class="mat-elevation-z8 playlist-table"
+>
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Playlist Name</th>
+    <td mat-cell *matCellDef="let playlist">{{ playlist.name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="createdAt">
+    <th mat-header-cell *matHeaderCellDef>Created At</th>
+    <td mat-cell *matCellDef="let playlist">{{ playlist.createdAt }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="creator">
+    <th mat-header-cell *matHeaderCellDef>Author</th>
+    <td mat-cell *matCellDef="let playlist">{{ playlist.creator }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="select">
+    <th mat-header-cell *matHeaderCellDef>Include in CSV</th>
+    <td mat-cell *matCellDef="let playlist">
+      <mat-checkbox
+        (click)="$event.stopPropagation()"
+        (change)="$event ? selection.toggle(playlist) : null"
+        [checked]="selection.isSelected(playlist)"
+      >
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
+  <tr mat-row *matRowDef="let playlist; columns: tableColumns"></tr>
+</table>
