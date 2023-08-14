@@ -12,7 +12,7 @@ import { tap } from 'rxjs/operators';
 })
 export class ExportComponent {
   public readonly playlistsObservable: Observable<Playlist[]>;
-  public readonly tableColumns = ['name', 'createdAt', 'creator', 'select'];
+  public readonly tableColumns = ['name', 'creator', 'select'];
   public readonly selection = new SelectionModel<Playlist>(true, []);
   private playlists?: Playlist[];
   private exportRequested: boolean = false;
@@ -50,13 +50,11 @@ export class ExportComponent {
   exportCsv(): void {
     const playlistIds = this.selection.selected.map((playlist) => playlist.id);
     this.exportRequested = true;
-    this.exportService
-      .getCsvForPlaylists(playlistIds)
-      .subscribe((response) => {
-        const blob = new Blob([response], { type: 'text/csv' });
-        const url= window.URL.createObjectURL(blob);
-        window.open(url);
-      });
+    this.exportService.getCsvForPlaylists(playlistIds).subscribe((response) => {
+      const blob = new Blob([response], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      window.open(url);
+    });
   }
 
   exportIsDisabled(): boolean {
