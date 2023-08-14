@@ -1,4 +1,5 @@
-﻿using api.Models.Dtos;
+﻿using System.Text;
+using api.Models.Dtos;
 using api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,9 +18,12 @@ public class CsvExportController : ControllerBase
 
     [Route("export")]
     [HttpGet]
-    public async Task<string> Export([FromQuery] string[] playlistIds)
+    public async Task<FileResult> Export([FromQuery] string[] playlistIds)
     {
-        return await _exportService.GetSpotifyPlaylistsAsCsv(playlistIds);
+        var csv = await _exportService.GetSpotifyPlaylistsAsCsv(playlistIds);
+        var filename = $"{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.csv";
+
+        return File(Encoding.UTF8.GetBytes(csv), "text/csv", filename);
     }
 
     [Route("playlists")]

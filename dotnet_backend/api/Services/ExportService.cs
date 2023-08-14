@@ -23,18 +23,39 @@ public class ExportService
         _csvGenerator = csvGenerator;
     }
 
-    public async Task<string> GetSpotifyPlaylistsAsCsv(IEnumerable<string> playlistIds)
+    public async Task<string> GetSpotifyPlaylistsAsCsv(
+        IEnumerable<string> playlistIds)
     {
-        var spotifyApiAccessToken = await _userContext.GetSpotifyApiAccessTokenForCurrentUser();
-        var playlistsResponse = await _spotifyApiGateway.GetPlaylistsForUser(spotifyApiAccessToken);
+        var spotifyApiAccessToken =
+            await _userContext.GetSpotifyApiAccessTokenForCurrentUser();
+        var playlistsResponse =
+            await _spotifyApiGateway.GetPlaylistsForUser(spotifyApiAccessToken);
 
         var playlists = new List<Playlist>();
         foreach (var playlistId in playlistIds)
         {
-            var getTracksResponse = await _spotifyApiGateway.GetPlaylistTracks(spotifyApiAccessToken, playlistId);
-            var playlist = playlistsResponse.items.First(playlist => playlist.id == playlistId);
+            _logger.LogInformation(
+                $"Processing {playlistId}");
 
-            playlists.Add(MapGetTracksResponseToPlaylist(getTracksResponse, playlist));
+            var getTracksResponse =
+                await _spotifyApiGateway.GetPlaylistTracks(
+                    spotifyApiAccessToken,
+                    playlistId);
+            var playlist =
+                playlistsResponse.items.First(playlist =>
+                    playlist.id == playlistId);
+
+            if (getTracksResponse.items.Count == 0 ||
+                getTracksResponse.items.Any(item =>
+                    item == null || item.track == null))
+            {
+                _logger.LogWarning(
+                    $"Playlist {playlistId} has invalid data. Skipping.");
+                continue;
+            }
+
+            playlists.Add(
+                MapGetTracksResponseToPlaylist(getTracksResponse, playlist));
         }
 
         return _csvGenerator.GenerateCsvFromPlaylists(playlists);
@@ -42,21 +63,27 @@ public class ExportService
 
     public async Task<IEnumerable<PlaylistDto>> GetPlaylists()
     {
-        var spotifyApiAccessToken = await _userContext.GetSpotifyApiAccessTokenForCurrentUser();
-        var playlistsResponse = await _spotifyApiGateway.GetPlaylistsForUser(spotifyApiAccessToken);
+        var spotifyApiAccessToken =
+            await _userContext.GetSpotifyApiAccessTokenForCurrentUser();
+        var playlistsResponse =
+            await _spotifyApiGateway.GetPlaylistsForUser(spotifyApiAccessToken);
 
-        _logger.LogInformation("Request successfully made to https://api.spotify.com/v1/me/playlists");
-        var playlists = playlistsResponse.items.Select(playlist => new PlaylistDto
-        {
-            creator = playlist.owner.display_name,
-            id = playlist.id,
-            name = playlist.name
-        });
+        _logger.LogInformation(
+            "Request successfully made to https://api.spotify.com/v1/me/playlists");
+        var playlists = playlistsResponse.items.Select(playlist =>
+            new PlaylistDto
+            {
+                creator = playlist.owner.display_name,
+                id = playlist.id,
+                name = playlist.name
+            });
 
         return playlists;
     }
 
-    private Playlist MapGetTracksResponseToPlaylist(GetTracksResponse getTracksResponse, Item playlist)
+    private Playlist MapGetTracksResponseToPlaylist(
+        GetTracksResponse getTracksResponse,
+        Item playlist)
     {
         return new Playlist
         {
@@ -68,7 +95,8 @@ public class ExportService
                 Artists = track.track.artists.Select(artist => artist.name),
                 Name = track.track.name,
                 Id = track.track.id,
-                Duration = convertFromMsToReadableFormat(track.track.duration_ms),
+                Duration =
+                    convertFromMsToReadableFormat(track.track.duration_ms),
                 AddedAt = track.added_at,
                 AddedBy = track.added_by.uri,
                 AlbumName = track.track.album.name,
@@ -82,6 +110,11 @@ public class ExportService
     {
         var timeSpan = TimeSpan.FromMilliseconds(trackDurationMs);
 
-        return $"{timeSpan.Minutes}:{timeSpan.Seconds}";
+        if (timeSpan.TotalHours >= 1)
+        {
+            return timeSpan.ToString(@"hh\:mm\:ss");
+        }
+
+        return timeSpan.ToString(@"mm\:ss");
     }
 }
