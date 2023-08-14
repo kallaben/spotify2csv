@@ -14,14 +14,14 @@ public class CsvExportController : ControllerBase
     {
         _exportService = exportService;
     }
-    
+
     [Route("export")]
     [HttpGet]
-    public async Task<string> Export(IEnumerable<string> playlistIds)
+    public async Task<string> Export([FromQuery] string[] playlistIds)
     {
         return await _exportService.GetSpotifyPlaylistsAsCsv(playlistIds);
     }
-    
+
     [Route("playlists")]
     [HttpGet]
     public async Task<IEnumerable<PlaylistDto>> GetPlaylists()

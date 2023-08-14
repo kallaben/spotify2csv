@@ -41,7 +41,7 @@ public class SpotifyApiGateway
 
     public async Task<GetTracksResponse> GetPlaylistTracks(string accessToken, string playlistId)
     {
-        var baseUrl = "https://api.spotify.com/v1/playlists/{playlistId}/tracks";
+        var baseUrl = $"https://api.spotify.com/v1/playlists/{playlistId}/tracks";
         var limit = 50;
         var url = $"{baseUrl}?limit={limit}";
 
