@@ -17,4 +17,10 @@ export class ExportService {
 
     return of(playlists);
   }
+
+  getCsvForPlaylists(playlistIds: string[]): Observable<boolean> {
+    console.log({ playlistIds });
+
+    return of(true);
+  }
 }

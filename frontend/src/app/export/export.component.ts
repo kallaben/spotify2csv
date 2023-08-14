@@ -15,8 +15,9 @@ export class ExportComponent {
   public readonly tableColumns = ['name', 'createdAt', 'creator', 'select'];
   public readonly selection = new SelectionModel<Playlist>(true, []);
   private playlists?: Playlist[];
+  private exportRequested: boolean = false;
 
-  constructor(exportService: ExportService) {
+  constructor(private exportService: ExportService) {
     this.playlistsObservable = exportService.getPlaylists().pipe(
       tap((playlists) => {
         this.playlists = playlists;
@@ -44,5 +45,15 @@ export class ExportComponent {
     this.isAllSelected()
       ? this.selection.clear()
       : this.playlists.forEach((playlist) => this.selection.select(playlist));
+  }
+
+  exportCsv(): void {
+    const playlistIds = this.selection.selected.map((playlist) => playlist.id);
+    this.exportRequested = true;
+    this.exportService.getCsvForPlaylists(playlistIds);
+  }
+
+  exportIsDisabled(): boolean {
+    return !this.selection.hasValue() || this.exportRequested;
   }
 }
