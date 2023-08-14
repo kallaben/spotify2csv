@@ -50,7 +50,9 @@ export class ExportComponent {
   exportCsv(): void {
     const playlistIds = this.selection.selected.map((playlist) => playlist.id);
     this.exportRequested = true;
-    this.exportService.getCsvForPlaylists(playlistIds);
+    this.exportService
+      .getCsvForPlaylists(playlistIds)
+      .subscribe((res) => console.log(res));
   }
 
   exportIsDisabled(): boolean {

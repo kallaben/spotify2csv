@@ -1,26 +1,23 @@
 import { Injectable } from '@angular/core';
 import { Playlist } from '../models/playlist';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExportService {
-  constructor() {}
+  private readonly baseUrl = 'api/CsvExport';
+
+  constructor(private httpClient: HttpClient) {}
 
   getPlaylists(): Observable<Playlist[]> {
-    const playlists: Playlist[] = [
-      { createdAt: new Date(), creator: 'Ben', name: 'Favorites', id: '1' },
-      { createdAt: new Date(), creator: 'Ben', name: 'Oldschool', id: '2' },
-      { createdAt: new Date(), creator: 'Ben', name: 'Run', id: '3' },
-    ];
-
-    return of(playlists);
+    return this.httpClient.get<Playlist[]>(`${this.baseUrl}/playlists`);
   }
 
-  getCsvForPlaylists(playlistIds: string[]): Observable<boolean> {
-    console.log({ playlistIds });
-
-    return of(true);
+  getCsvForPlaylists(playlistIds: string[]): Observable<string> {
+    return this.httpClient.get<string>(`${this.baseUrl}/export`, {
+      params: new HttpParams().appendAll({ playlistIds: playlistIds }),
+    });
   }
 }
