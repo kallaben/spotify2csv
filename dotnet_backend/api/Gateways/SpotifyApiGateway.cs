@@ -21,18 +21,39 @@ public class SpotifyApiGateway
 
     public async Task<GetPlaylistsResponse> GetPlaylistsForUser(string accessToken)
     {
-        var request = new HttpRequestMessage(HttpMethod.Get, "https://api.spotify.com/v1/me/playlists?limit=50")
+        var baseUrl = "https://api.spotify.com/v1/me/playlists";
+        var limit = 50;
+        var url = $"{baseUrl}?limit={limit}";
+
+        var initialResponse = await sendRequestToSpotify<GetPlaylistsResponse>(accessToken, url);
+        var remainder = initialResponse.total - initialResponse.limit;
+        var additionalQueriesToBeMade = remainder > 0 ? (int)Math.Ceiling((double)remainder / limit) : 0;
+        for (var i = 0; i < additionalQueriesToBeMade; i++)
+        {
+            var offset = limit * (i + 1);
+            var urlWithOffset = $"{baseUrl}?limit={limit}&offset={offset}";
+            var additionalResponse = await sendRequestToSpotify<GetPlaylistsResponse>(accessToken, urlWithOffset);
+            initialResponse.items.AddRange(additionalResponse.items);
+        }
+
+        return initialResponse;
+    }
+
+    private async Task<T> sendRequestToSpotify<T>(string accessToken, string url)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, url)
         {
             Headers =
             {
-                {"Authorization", $"Bearer {accessToken}"}
+                { "Authorization", $"Bearer {accessToken}" }
             }
         };
-        
+
         var response = await _httpClient.SendAsync(request);
+        
         return JToken
             .Parse(await response.Content.ReadAsStringAsync())
-            .ToObject<GetPlaylistsResponse>();
+            .ToObject<T>();
     }
 
     public async Task<GetTracksResponse> GetPlaylistTracks(string accessToken, string playlistId, int offset)
