@@ -11,6 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatTableModule,
     CdkTableModule,
     MatCheckboxModule,
+    MatButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

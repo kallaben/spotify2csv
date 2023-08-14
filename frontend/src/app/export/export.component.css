@@ -261,6 +261,15 @@ footer a {
   margin-right: 4px;
 }
 
+.playlist-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .playlist-table {
   width: 100%;
   max-width: 1000px;
@@ -269,6 +278,10 @@ footer a {
 
 .mat-column-select {
   text-align: center;
+}
+
+.table-button {
+  margin-left: auto;
 }
 
 svg#clouds {
