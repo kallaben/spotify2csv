@@ -17,9 +17,9 @@ public class CsvExportController : ControllerBase
     
     [Route("export")]
     [HttpGet]
-    public async Task<string> Export()
+    public async Task<string> Export(IEnumerable<string> playlistIds)
     {
-        return await _exportService.GetSpotifyPlaylistsAsCsv();
+        return await _exportService.GetSpotifyPlaylistsAsCsv(playlistIds);
     }
     
     [Route("playlists")]
