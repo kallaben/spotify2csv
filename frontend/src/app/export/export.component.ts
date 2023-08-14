@@ -52,7 +52,11 @@ export class ExportComponent {
     this.exportRequested = true;
     this.exportService
       .getCsvForPlaylists(playlistIds)
-      .subscribe((res) => console.log(res));
+      .subscribe((response) => {
+        const blob = new Blob([response], { type: 'text/csv' });
+        const url= window.URL.createObjectURL(blob);
+        window.open(url);
+      });
   }
 
   exportIsDisabled(): boolean {

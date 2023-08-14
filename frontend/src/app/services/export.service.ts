@@ -15,9 +15,12 @@ export class ExportService {
     return this.httpClient.get<Playlist[]>(`${this.baseUrl}/playlists`);
   }
 
-  getCsvForPlaylists(playlistIds: string[]): Observable<string> {
-    return this.httpClient.get<string>(`${this.baseUrl}/export`, {
+  getCsvForPlaylists(playlistIds: string[]): Observable<Blob> {
+    const options = {
       params: new HttpParams().appendAll({ playlistIds: playlistIds }),
-    });
+      responseType: 'blob' as 'json',
+    };
+
+    return this.httpClient.get<Blob>(`${this.baseUrl}/export`, options);
   }
 }
