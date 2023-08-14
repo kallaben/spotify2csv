@@ -12,7 +12,8 @@ public class CsvGenerator
         var rows = playlists.SelectMany(MapPlaylistToRow);
 
         using (var strWriter = new StringWriter())
-        using (var csvWriter = new CsvWriter(strWriter, CultureInfo.InvariantCulture))
+        using (var csvWriter =
+               new CsvWriter(strWriter, CultureInfo.InvariantCulture))
         {
             csvWriter.Context.RegisterClassMap<PlaylistCsvRowMap>();
             csvWriter.WriteRecords(rows);
@@ -36,6 +37,7 @@ public class CsvGenerator
                 IsLocal = track.IsLocal ? "Yes" : "No",
                 ReleaseDate = track.ReleaseDate,
                 ArtistNames = String.Join(", ", track.Artists),
+                PlaylistId = playlist.Id,
             }
         );
     }

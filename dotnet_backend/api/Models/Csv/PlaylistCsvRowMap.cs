@@ -16,5 +16,6 @@ public class PlaylistCsvRowMap : ClassMap<PlaylistCsvRow>
         Map(playlist => playlist.AddedBy).Index(7).Name("Added By");
         Map(playlist => playlist.Duration).Index(8).Name("Track Duration");
         Map(playlist => playlist.TrackId).Index(9).Name("Spotify Track ID");
+        Map(playlist => playlist.PlaylistId).Index(10).Name("Playlist ID");
     }
 }

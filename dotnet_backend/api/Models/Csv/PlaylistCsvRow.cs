@@ -12,4 +12,5 @@ public class PlaylistCsvRow
     public string AddedBy { get; set; }
     public string Duration { get; set; }
     public string TrackId { get; set; }
+    public string PlaylistId { get; set; }
 }
