@@ -1,4 +1,5 @@
 ﻿using api.Gateways;
+using api.Models.Dtos;
 
 namespace api.Services;
 
@@ -6,11 +7,13 @@ public class ExportService
 {
     private readonly UserContext _userContext;
     private readonly SpotifyApiGateway _spotifyApiGateway;
+    private readonly ILogger<ExportService> _logger;
 
-    public ExportService(UserContext userContext, SpotifyApiGateway spotifyApiGateway)
+    public ExportService(UserContext userContext, SpotifyApiGateway spotifyApiGateway, ILogger<ExportService> logger)
     {
         _userContext = userContext;
         _spotifyApiGateway = spotifyApiGateway;
+        _logger = logger;
     }
 
     public async Task<string> GetSpotifyPlaylistsAsCsv()
@@ -29,5 +32,22 @@ public class ExportService
         }
 
         return $"Playlist: {playlist.name}\n{String.Join("\n", allSongNames)}";
+    }
+
+    public async Task<IEnumerable<PlaylistDto>> GetPlaylists()
+    {
+        var spotifyApiAccessToken = await _userContext.GetSpotifyApiAccessTokenForCurrentUser();
+        var playlistsResponse = await _spotifyApiGateway.GetPlaylistsForUser(spotifyApiAccessToken);
+        
+        _logger.LogInformation("Request successfully made to https://api.spotify.com/v1/me/playlists");
+        var playlists = playlistsResponse.items.Select(playlist => new PlaylistDto
+        {
+            creator = playlist.owner.display_name,
+            createdAt = DateTime.UtcNow,
+            id = playlist.id,
+            name = playlist.name
+        });
+
+        return playlists;
     }
 }

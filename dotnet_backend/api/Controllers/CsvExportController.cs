@@ -1,4 +1,5 @@
-﻿using api.Services;
+﻿using api.Models.Dtos;
+using api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
@@ -19,5 +20,12 @@ public class CsvExportController : ControllerBase
     public async Task<string> Export()
     {
         return await _exportService.GetSpotifyPlaylistsAsCsv();
+    }
+    
+    [Route("playlists")]
+    [HttpGet]
+    public async Task<IEnumerable<PlaylistDto>> GetPlaylists()
+    {
+        return await _exportService.GetPlaylists();
     }
 }
