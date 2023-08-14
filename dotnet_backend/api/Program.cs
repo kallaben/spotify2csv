@@ -20,10 +20,7 @@ builder.Services.Configure<SpotifyApiSettings>(
     builder.Configuration.GetSection("SpotifyApi"));
 
 builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession(options =>
-{
-    options.Cookie.IsEssential = true;
-});
+builder.Services.AddSession(options => { options.Cookie.IsEssential = true; });
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
@@ -32,6 +29,7 @@ builder.Services.AddScoped<UserContext>();
 builder.Services.AddScoped<SpotifyApiGateway>();
 builder.Services.AddScoped<SpotifyAuthorizationService>();
 builder.Services.AddScoped<ExportService>();
+builder.Services.AddScoped<CsvGenerator>();
 
 var app = builder.Build();
 

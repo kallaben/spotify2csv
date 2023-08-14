@@ -2,13 +2,13 @@ namespace api.Models;
 
 public class PlaylistTrack
 {
-    private string Id { get; set; }
-    private string Name { get; set; }
-    private IList<string> Artists { get; set; }
-    private string Duration { get; set; }
-    private string AlbumName { get; set; }
-    private string IsLocal { get; set; }
-    private DateTime ReleaseDate { get; set; }
-    private string AddedBy { get; set; }
-    private DateTime AddedAt { get; set; }
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public IEnumerable<string> Artists { get; set; }
+    public string Duration { get; set; }
+    public string AlbumName { get; set; }
+    public bool IsLocal { get; set; }
+    public string ReleaseDate { get; set; }
+    public string AddedBy { get; set; }
+    public DateTime AddedAt { get; set; }
 }
