@@ -16,6 +16,17 @@ spec:
         - name: api
           image: spotify-api
           imagePullPolicy: Never
+          env:
+            - name: SpotifyApi__ClientId
+              valueFrom:
+                secretKeyRef:
+                  name: spotify-credentials
+                  key: client-id
+            - name: SpotifyApi__ClientSecret
+              valueFrom:
+                secretKeyRef:
+                  name: spotify-credentials
+                  key: client-secret
 ---
 apiVersion: v1
 kind: Service
