@@ -12,7 +12,6 @@ public class AuthenticationMiddleware
         "/Authentication/callback",
         "/Authentication/is-authenticated",
         "/Authentication/login",
-        "/Health"
     };
 
     public AuthenticationMiddleware(RequestDelegate next)

@@ -37,6 +37,7 @@ var app = builder.Build();
 
 app.UseRouting();
 app.UseSession();
+app.UseHealthCheck();
 app.UseSpotifyAuthentication();
 app.MapControllers();
 
