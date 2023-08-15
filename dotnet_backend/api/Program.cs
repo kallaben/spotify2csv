@@ -18,6 +18,8 @@ builder.Services.Configure<MongoSettings>(
     builder.Configuration.GetSection("Mongo"));
 builder.Services.Configure<SpotifyApiSettings>(
     builder.Configuration.GetSection("SpotifyApi"));
+builder.Services.Configure<WebSettings>(
+    builder.Configuration.GetSection("Web"));
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options => { options.Cookie.IsEssential = true; });

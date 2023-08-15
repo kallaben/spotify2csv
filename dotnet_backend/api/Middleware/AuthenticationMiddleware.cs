@@ -1,7 +1,5 @@
 ﻿using System.Net;
-using api.Models;
 using api.Services;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace api.Middleware;
 

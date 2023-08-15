@@ -1,6 +1,8 @@
 ﻿using api.Gateways;
 using api.Models;
+using api.Models.Settings;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
 namespace api.Services;
@@ -10,15 +12,22 @@ public class SpotifyAuthorizationService
     private readonly ISessionRepository _sessionRepository;
     private readonly SpotifyApiGateway _spotifyApiGateway;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly SpotifyApiSettings _spotifyApiSettings;
+    private readonly WebSettings _webSettings;
 
     public SpotifyAuthorizationService(
         ISessionRepository sessionRepository,
         SpotifyApiGateway spotifyApiGateway,
-        IHttpContextAccessor httpContextAccessor)
+        IHttpContextAccessor httpContextAccessor,
+        IOptions<SpotifyApiSettings> spotifyApiSettings,
+        IOptions<WebSettings> webSettings
+    )
     {
         _sessionRepository = sessionRepository;
         _spotifyApiGateway = spotifyApiGateway;
         _httpContextAccessor = httpContextAccessor;
+        _spotifyApiSettings = spotifyApiSettings.Value;
+        _webSettings = webSettings.Value;
     }
 
 
@@ -77,9 +86,9 @@ public class SpotifyAuthorizationService
         var queryParameters = new Dictionary<string, string?>
         {
             { "response_type", "code" },
-            { "client_id", "543a4066a8a94ff7ab4705453913eb4e" },
+            { "client_id", _spotifyApiSettings.ClientId },
             { "scope", "playlist-read-private" },
-            { "redirect_uri", "http://localhost:4200/redirect" },
+            { "redirect_uri", $"{_webSettings.Domain}/redirect" },
             { "state", $"{sessionId}:/" }
         };
 
