@@ -18,7 +18,11 @@ The frontend should be up on running now.
 3. Go to
    the [Spotify for developers dashboard](https://developer.spotify.com/dashboard/543a4066a8a94ff7ab4705453913eb4e/settings)
    to get the client secret used to communicate with the Spotify API. The secret
-   needs to be inserted in `dotnet_backend/api/appsettings.Development.json`.
+   needs to be inserted in `spotify2csv/dotnet_backend/api/.env` as such:
+     ```
+    SpotifyApi__ClientId=543a4066a8a94ff7ab4705453913eb4e
+    SpotifyApi__ClientSecret={pasteClientSecret}
+    ```
 3. Open the `dotnet_backend.sln` file in rider (located in the `dotnet_backend`
    folder).
 4. Run the "api" launch configuration through Rider (you will be informed if you
