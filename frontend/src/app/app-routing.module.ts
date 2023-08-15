@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: 'redirect', component: RedirectComponent },
   { path: 'export', component: ExportComponent },
   { path: '', component: HomeComponent },
+  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({
