@@ -15,6 +15,8 @@ public class HealthCheckMiddleware
         HttpContext httpContext,
         ILogger<HealthCheckMiddleware> logger)
     {
+        logger.LogInformation($"Path called: {httpContext.Request.Path}");
+
         if (httpContext.Request.Path == "/Health")
         {
             logger.LogInformation("Health check called.");
