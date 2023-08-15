@@ -1,4 +1,5 @@
-﻿using api.Models;
+﻿using System.Net;
+using api.Models;
 using api.Services;
 using Microsoft.AspNetCore.WebUtilities;
 
@@ -10,8 +11,9 @@ public class AuthenticationMiddleware
 
     private readonly List<string> _whitelistedPaths = new List<string>
     {
-        "/Authentication/callback", 
-        "/Authentication/is-authenticated"
+        "/Authentication/callback",
+        "/Authentication/is-authenticated",
+        "/Authentication/login"
     };
 
     public AuthenticationMiddleware(RequestDelegate next)
@@ -19,14 +21,16 @@ public class AuthenticationMiddleware
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext httpContext, ISessionRepository sessionRepository)
+    public async Task InvokeAsync(
+        HttpContext httpContext,
+        ISessionRepository sessionRepository)
     {
         if (_whitelistedPaths.Contains(httpContext.Request.Path))
         {
             await _next(httpContext);
             return;
         }
-        
+
         var sessionId = httpContext.Session.Id;
         var session = await sessionRepository.GetSessionOrNull(sessionId);
 
@@ -35,32 +39,8 @@ public class AuthenticationMiddleware
             await _next(httpContext);
             return;
         }
-        
-        httpContext.Session.SetString("CustomSessionID", new Guid().ToString());
 
-        if (session == null)
-        {
-            var newSession = new Session
-            {
-                SessionId = sessionId
-            };
-            
-            await sessionRepository.InsertSession(newSession);
-        }
-
-        var spotifySsoBaseUrl = "https://accounts.spotify.com/authorize";
-        var queryParameters = new Dictionary<string, string?>
-        {
-            {"response_type", "code"},
-            {"client_id", "543a4066a8a94ff7ab4705453913eb4e"},
-            {"scope", "playlist-read-private"},
-            {"redirect_uri", "http://localhost:4200/redirect"},
-            {"state", $"{sessionId}:{httpContext.Request.Path}"} 
-        };
-        
-        var spotifySsoUrl = QueryHelpers.AddQueryString(spotifySsoBaseUrl, queryParameters);
-        
-        httpContext.Response.Redirect(spotifySsoUrl);
+        httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
     }
 }
 
