@@ -1,5 +1,7 @@
-﻿using api.Models;
+﻿using System.Text;
+using api.Models;
 using api.Models.Settings;
+using api.Util;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 
@@ -10,18 +12,19 @@ public class SpotifyApiGateway
     private readonly HttpClient _httpClient;
     private readonly string _clientId;
     private readonly string _clientSecret;
-    private readonly WebSettings _webSettings;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
 
     public SpotifyApiGateway(
         IHttpClientFactory httpClientFactory,
         IOptions<SpotifyApiSettings> spotifyApiSettings,
-        IOptions<WebSettings> webSettings)
+        IHttpContextAccessor httpContextAccessor
+    )
     {
         _httpClient = httpClientFactory.CreateClient();
         _clientId = spotifyApiSettings.Value.ClientId;
         _clientSecret = spotifyApiSettings.Value.ClientSecret;
-        _webSettings = webSettings.Value;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<GetPlaylistsResponse> GetPlaylistsForUser(
@@ -84,7 +87,7 @@ public class SpotifyApiGateway
         var authString = $"{_clientId}:{_clientSecret}";
         var base64AuthString =
             Convert.ToBase64String(
-                System.Text.Encoding.UTF8.GetBytes(authString));
+                Encoding.UTF8.GetBytes(authString));
         var basicAuthString = $"Basic {base64AuthString}";
 
         var request = new HttpRequestMessage(HttpMethod.Post,
@@ -97,7 +100,10 @@ public class SpotifyApiGateway
             Content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 { "code", authenticationCode },
-                { "redirect_uri", $"{_webSettings.Domain}/redirect" },
+                {
+                    "redirect_uri",
+                    $"{UrlUtils.GetOrigin(_httpContextAccessor.HttpContext)}/redirect"
+                },
                 { "grant_type", "authorization_code" }
             })
         };

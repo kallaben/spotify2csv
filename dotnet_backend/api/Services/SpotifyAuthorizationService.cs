@@ -1,9 +1,9 @@
 ﻿using api.Gateways;
 using api.Models;
 using api.Models.Settings;
+using api.Util;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
 
 namespace api.Services;
 
@@ -88,7 +88,10 @@ public class SpotifyAuthorizationService
             { "response_type", "code" },
             { "client_id", _spotifyApiSettings.ClientId },
             { "scope", "playlist-read-private" },
-            { "redirect_uri", $"{_webSettings.Domain}/redirect" },
+            {
+                "redirect_uri",
+                $"{UrlUtils.GetOrigin(httpContext)}/redirect"
+            },
             { "state", $"{sessionId}:/" }
         };
 
