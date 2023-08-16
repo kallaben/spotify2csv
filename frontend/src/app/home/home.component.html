@@ -3,12 +3,8 @@
 
 <div class="content" role="main">
   <div class="card-container">
-    <div *ngIf="(isAuthenticated | async); else notAuthenticated">
-      <a
-        class="card"
-        rel="noopener"
-        routerLink="/export"
-      >
+    <div *ngIf="isAuthenticated | async; else notAuthenticated">
+      <a class="card" rel="noopener" routerLink="/export">
         <span>Fetch playlists</span>
         <svg
           class="material-icons"
@@ -26,7 +22,7 @@
         class="card"
         target="_blank"
         rel="noopener"
-        href="http://localhost:4200/api/Authentication/login"
+        href="{{ window.location.origin + '/api/Authentication/login' }}"
       >
         <span>Login to Spotify</span>
         <svg
@@ -40,6 +36,5 @@
         </svg>
       </a>
     </ng-template>
-
   </div>
 </div>

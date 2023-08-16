@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
 import { Observable } from 'rxjs';
 
@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class HomeComponent {
   public isAuthenticated: Observable<boolean>;
+  public readonly window = window;
 
   constructor(private authenticationService: AuthenticationService) {
     this.isAuthenticated =

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router, UrlSerializer } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { HttpParams } from '@angular/common/http';
 
 @Component({
@@ -10,21 +10,17 @@ import { HttpParams } from '@angular/common/http';
 export class RedirectComponent implements OnInit {
   redirectUrl: string = '';
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private serializer: UrlSerializer
-  ) {}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) =>
-      this.handleQueryParams(params)
+      this.handleQueryParams(params),
     );
   }
 
   private handleQueryParams(params: Params) {
     const stringifiedParams = new HttpParams({ fromObject: params }).toString();
 
-    this.redirectUrl = `http://localhost:4200/api/Authentication/callback?${stringifiedParams}`;
+    this.redirectUrl = `${window.location.origin}/api/Authentication/callback?${stringifiedParams}`;
   }
 }
