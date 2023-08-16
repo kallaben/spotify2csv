@@ -35,6 +35,7 @@ builder.Services.AddScoped<CsvGenerator>();
 
 var app = builder.Build();
 
+app.UsePathBase(new PathString("/api"));
 app.UseRouting();
 app.UseSession();
 app.UseHealthCheck();

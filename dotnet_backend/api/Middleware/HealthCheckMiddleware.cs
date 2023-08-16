@@ -17,7 +17,7 @@ public class HealthCheckMiddleware
     {
         logger.LogInformation($"Path called: {httpContext.Request.Path}");
 
-        if (httpContext.Request.Path == "/Health")
+        if (httpContext.Request.Path == "/Health" || httpContext.Request.Path == "/")
         {
             logger.LogInformation("Health check called.");
             httpContext.Response.StatusCode = (int)HttpStatusCode.OK;
