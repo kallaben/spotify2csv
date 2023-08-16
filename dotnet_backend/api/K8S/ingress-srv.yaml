@@ -18,3 +18,10 @@ spec:
                 name: api-clusterip-srv
                 port:
                   number: 80
+          - path: /()(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: fe-clusterip-srv
+                port:
+                  number: 80

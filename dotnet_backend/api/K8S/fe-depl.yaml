@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fe-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fe
+  template:
+    metadata:
+      labels:
+        app: fe
+    spec:
+      containers:
+        - name: fe
+          image: spotify-fe
+          imagePullPolicy: Never
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fe-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: fe
+  ports:
+    - name: fe
+      protocol: TCP
+      port: 80
+      targetPort: 80
+      
