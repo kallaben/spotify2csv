@@ -3,13 +3,11 @@ kind: Ingress
 metadata:
   name: ingress-srv
   annotations:
-    nginx.ingress.kubernetes.io/use-regex: 'true'
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    kubernetes.io/ingress.class: "gce"
 spec:
-  ingressClassName: nginx
+  ingressClassName: gce
   rules:
-    - host: acme.com
-      http:
+    - http:
         paths:
           - path: /api(/|$)(.*)
             pathType: Prefix

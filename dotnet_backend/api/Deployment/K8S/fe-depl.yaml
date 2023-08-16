@@ -14,8 +14,7 @@ spec:
     spec:
       containers:
         - name: fe
-          image: spotify-fe
-          imagePullPolicy: Never
+          image: kallaben/spotify-fe
 ---
 apiVersion: v1
 kind: Service

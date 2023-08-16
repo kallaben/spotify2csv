@@ -14,8 +14,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: spotify-api
-          imagePullPolicy: Never
+          image: kallaben/spotify-api
           env:
             - name: SpotifyApi__ClientId
               valueFrom:
